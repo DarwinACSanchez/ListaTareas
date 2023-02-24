@@ -20,8 +20,11 @@
               <!-- ciclo for para recorre el array -->
               <li v-for="(tarea, index) of listTareas" :key="index"
               class="list-group-item d-flex justify-content-between">
-                <span class="cursor">
-                  <i class="fa-sharp fa-regular fa-circle"></i>
+              <!-- si es verdadero pone el cleck en verde -->
+                <span class="cursor" v-bind:class="{'text-success': tarea.estado}" 
+                v-on:click="editarTarea(tarea, index)">
+                  <!-- cambia el icono si esta clicleado o no  -->
+                  <i v-bind:class="[tarea.estado ? 'fa-solid fa-circle-check' : 'fa-sharp fa-regular fa-circle']"></i>
                 </span>
                 {{ tarea.nombre }}
                 <span class="text-danger cursor" v-on:click="eliminarTarea(index)">
@@ -56,6 +59,9 @@
       },
       eliminarTarea(index) {
         this.listTareas.splice(index, 1) //elimina un elemento
+      },
+      editarTarea(tarea, index) {
+        this.listTareas[index].estado = !tarea.estado
       }
     }
   }
