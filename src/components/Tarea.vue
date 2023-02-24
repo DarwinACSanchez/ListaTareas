@@ -15,14 +15,16 @@
               </div>
             </div>
             <br>
+            <h5 v-if="listTareas == 0">No hay Tareas para Realizar</h5>
             <ul class="list-group">
+              <!-- ciclo for para recorre el array -->
               <li v-for="(tarea, index) of listTareas" :key="index"
               class="list-group-item d-flex justify-content-between">
                 <span class="cursor">
                   <i class="fa-sharp fa-regular fa-circle"></i>
                 </span>
                 {{ tarea.nombre }}
-                <span class="text-danger cursor">
+                <span class="text-danger cursor" v-on:click="eliminarTarea(index)">
                   <i class="fa-solid fa-trash-can"></i>
                 </span>
               </li>
@@ -51,6 +53,9 @@
         }
         this.listTareas.push(tarea); //agregamos al array
         this.tarea = ''; //limpia el combo
+      },
+      eliminarTarea(index) {
+        this.listTareas.splice(index, 1) //elimina un elemento
       }
     }
   }
