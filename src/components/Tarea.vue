@@ -27,7 +27,7 @@
                   <i v-bind:class="[tarea.estado ? 'fa-solid fa-circle-check' : 'fa-sharp fa-regular fa-circle']"></i>
                 </span>
                 {{ tarea.nombre }}
-                <span class="text-danger cursor" v-on:click="eliminarTarea(index)">
+                <span class="text-danger cursor" v-on:click="eliminarTarea(tarea.id)">
                   <i class="fa-solid fa-trash-can"></i>
                 </span>
               </li>
@@ -59,8 +59,13 @@ import axios from "axios";
         this.listTareas.push(tarea); //agregamos al array
         this.tarea = ''; //limpia el combo
       },
-      eliminarTarea(index) {
-        this.listTareas.splice(index, 1) //elimina un elemento
+      eliminarTarea(id) {
+        //this.listTareas.splice(index, 1) //elimina un elemento
+        axios.delete("https://localhost:44323/api/Tarea/" + id).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error)
+        });
       },
       editarTarea(tarea, index) {
         this.listTareas[index].estado = !tarea.estado
