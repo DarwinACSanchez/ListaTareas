@@ -15,8 +15,15 @@
               </div>
             </div>
             <br>
+            <!-- Spinners -->
+            <div class="text-center">
+              <div v-if="loading" class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <!-- End Spinners -->
             <h5 v-if="listTareas == 0">No hay Tareas para Realizar</h5>
-            <ul class="list-group">
+            <ul v-if="!loading" class="list-group"> <!-- cuando esta esperan no muestra la lista -->
               <!-- ciclo for para recorre el array -->
               <li v-for="(tarea, index) of listTareas" :key="index"
               class="list-group-item d-flex justify-content-between">
@@ -47,7 +54,8 @@ import axios from "axios";
     data() {
       return {
         tarea: '',
-        listTareas: []
+        listTareas: [],
+        loading: false,
       }
     },
     methods: {
@@ -56,15 +64,28 @@ import axios from "axios";
           nombre: this.tarea, //accedemos a esa variable
           estado: false
         }
-        this.listTareas.push(tarea); //agregamos al array
+        //this.listTareas.push(tarea); //agregamos al array
+        this.loading = true;
+        axios.post("https://localhost:44323/api/Tarea/", tarea).then(response => {
+          console.log(response);
+          this.loading = false;
+          this.obtenerTareas();
+        }).catch(error => {
+          console.error(error);
+        })
         this.tarea = ''; //limpia el combo
       },
       eliminarTarea(id) {
         //this.listTareas.splice(index, 1) //elimina un elemento
+        this.loading =true;
         axios.delete("https://localhost:44323/api/Tarea/" + id).then(response => {
           console.log(response);
+          this.obtenerTareas();
+          this.loading = false;
         }).catch(error => {
-          console.log(error)
+          console.log(error);
+          this.obtenerTareas();
+          this.loading = false;
         });
       },
       editarTarea(tarea, index) {
