@@ -29,7 +29,7 @@
               class="list-group-item d-flex justify-content-between">
               <!-- si es verdadero pone el cleck en verde -->
                 <span class="cursor" v-bind:class="{'text-success': tarea.estado}" 
-                v-on:click="editarTarea(tarea, index)">
+                v-on:click="editarTarea(tarea, tarea.id)">
                   <!-- cambia el icono si esta clicleado o no  -->
                   <i v-bind:class="[tarea.estado ? 'fa-solid fa-circle-check' : 'fa-sharp fa-regular fa-circle']"></i>
                 </span>
@@ -88,14 +88,21 @@ import axios from "axios";
           this.loading = false;
         });
       },
-      editarTarea(tarea, index) {
-        this.listTareas[index].estado = !tarea.estado
+      editarTarea(tarea, id) {
+        // this.listTareas[index].estado = !tarea.estado
+        this.loading = true;
+        axios.put("https://localhost:44323/api/Tarea/" + id, tarea).then(()=> {
+          this.obtenerTareas();
+          this.loading = false;
+        }).catch(() => this.loading = false);
       },
       obtenerTareas() {
+        this.loading = true;
         axios.get("https://localhost:44323/api/Tarea").then(response => {
           console.log(response);
           this.listTareas = response.data;
-        })
+          this.loading = false;
+        }).catch(() => this.loading = false);
       }
     },
     created: function() {
